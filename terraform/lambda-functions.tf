@@ -13,9 +13,9 @@ data "archive_file" "lambda_zip" {
 resource "aws_lambda_function" "take_snapshot" {
   filename         = "lambda.zip"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
-  function_name    = "EC2Cryptomator_take_snaphot"
+  function_name    = "EC2Cryptomatic_take_snaphot"
   role             = "${aws_iam_role.iam_role_lambda.arn}"
-  description      = "Some AWS lambda"
+  description      = "Take snapshot on existing EBS volumes"
   handler          = "ebs_take_snapshot.lambda_handler"
   runtime          = "python3.6"
   timeout          = 300

@@ -109,3 +109,6 @@ venv.bak/
 # Exclude Terraform files
 *.tfstate*
 .terraform/
+
+# Exclude ZIP files
+*.zip

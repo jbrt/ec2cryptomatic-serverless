@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-from .aws_library.ebs_create_snapshot import EBSCreateSnapshot
+from aws_library.ebs_create_snapshot import EBSCreateSnapshot
 
 
 def lambda_handler(event, context):
