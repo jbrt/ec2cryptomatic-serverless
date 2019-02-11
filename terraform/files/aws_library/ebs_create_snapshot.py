@@ -1,13 +1,12 @@
-#!/usr/bin/env python3
 # coding: utf-8
 
 import boto3
 import logging
 
 LOGGER = logging.getLogger('ec2-cryptomatic')
-LOGGER.setLevel(logging.CRITICAL)
+LOGGER.setLevel(logging.INFO)
 stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.CRITICAL)
+stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
 
@@ -15,6 +14,12 @@ class EBSCreateSnapshot(object):
     """ Take a snapshot of an existing EBS volume """
 
     def __init__(self, region: str, volume_id: str, uuid: str = ''):
+        """
+        Initializer
+        :param region: (str) AWS region (ex: eu-west-1)
+        :param volume_id: (str) EBS volume ID
+        :param uuid: (str) An UUID as session ID
+        """
         self._region = region
         self._volume_id = volume_id
         self._log_base = f'{__class__.__name__} {uuid}'
