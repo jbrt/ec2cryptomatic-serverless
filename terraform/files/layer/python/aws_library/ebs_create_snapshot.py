@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import boto3
 import logging
+from aws_library.ebs_abstract_classes import EBSBase
 
 LOGGER = logging.getLogger('ec2-cryptomatic')
 LOGGER.setLevel(logging.INFO)
@@ -10,7 +10,7 @@ stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
 
-class EBSCreateSnapshot(object):
+class EBSCreateSnapshot(EBSBase):
     """ Take a snapshot of an existing EBS volume """
 
     def __init__(self, region: str, volume_id: str, uuid: str = ''):
@@ -20,16 +20,10 @@ class EBSCreateSnapshot(object):
         :param volume_id: (str) EBS volume ID
         :param uuid: (str) An UUID as session ID
         """
-        self._region = region
+        super().__init__(region=region, uuid=uuid)
+
         self._volume_id = volume_id
-        self._log_base = f'{__class__.__name__} {uuid}'
-
-        self._ec2_client = boto3.client('ec2', region_name=region)
-        self._ec2_resource = boto3.resource('ec2', region_name=region)
-
         self._wait_snapshot = self._ec2_client.get_waiter('snapshot_completed')
-
-        LOGGER.info(f'{self._log_base} Initializing')
 
     def start(self):
         """

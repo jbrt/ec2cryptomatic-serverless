@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import boto3
 import logging
+from aws_library.ebs_abstract_classes import EBSBase
 
 LOGGER = logging.getLogger('ec2-cryptomatic')
 LOGGER.setLevel(logging.INFO)
@@ -10,7 +10,7 @@ stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
 
-class EBSEncryptSnapshot(object):
+class EBSEncryptSnapshot(EBSBase):
     """ Encrypt an existing EBS snapshot """
 
     def __init__(self, region: str, snapshot_id: str,
@@ -24,18 +24,12 @@ class EBSEncryptSnapshot(object):
         :param destroy_source: (bool) if True destroy the source snapshot after encryption
         :param uuid: (str) UUID used for tracing
         """
+        super().__init__(region=region, uuid=uuid)
+
         self._destroy_source = destroy_source
-        self._region = region
         self._kms_key = kms_key
         self._snapshot_id = snapshot_id
-        self._log_base = f'{__class__.__name__} {uuid}'
-
-        self._ec2_client = boto3.client('ec2', region_name=region)
-        self._ec2_resource = boto3.resource('ec2', region_name=region)
-
         self._wait_snapshot = self._ec2_client.get_waiter('snapshot_completed')
-
-        LOGGER.info(f'{self._log_base} Initializing')
 
     def start(self):
         """
