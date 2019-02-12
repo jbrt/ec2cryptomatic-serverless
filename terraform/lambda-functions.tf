@@ -6,13 +6,19 @@ provider "aws" {
 
 data "archive_file" "layer_zip" {
   type        = "zip"
-  source_dir  = "files/aws_library"
+  source_dir  = "files/layer"
   output_path = "layer.zip"
 }
 
-data "archive_file" "lambda_zip" {
+data "archive_file" "take_snapshot_zip" {
   type        = "zip"
   source_file  = "files/ebs_take_snapshot.py"
+  output_path = "lambda.zip"
+}
+
+data "archive_file" "encrypt_snapshot_zip" {
+  type        = "zip"
+  source_file  = "files/ebs_encrypt_snapshot.py"
   output_path = "lambda.zip"
 }
 
@@ -24,7 +30,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 }
 
 resource "aws_lambda_function" "take_snapshot" {
-  filename         = "lambda.zip"
+  filename         = "take_snapshot_zip"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
   function_name    = "EC2Cryptomatic_take_snapshot"
   layers           = ["${aws_lambda_layer_version.lambda_layer.layer_arn}"]
@@ -35,9 +41,8 @@ resource "aws_lambda_function" "take_snapshot" {
   timeout          = 300
 }
 
-
 resource "aws_lambda_function" "encrypt_snapshot" {
-  filename         = "lambda.zip"
+  filename         = "encrypt_snapshot_zip"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
   function_name    = "EC2Cryptomatic_encrypt_snapshot"
   role             = "${aws_iam_role.iam_role_lambda.arn}"
