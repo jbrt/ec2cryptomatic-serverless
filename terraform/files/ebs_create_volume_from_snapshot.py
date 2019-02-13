@@ -9,4 +9,4 @@ def lambda_handler(event, context):
                                 snapshot_id=event['snapshot_id'],
                                 az=event['az'],
                                 volume_type=event['volume_type'],
-                                uuid=event['event']).start()
+                                uuid=event['uuid']).start()

@@ -51,6 +51,7 @@ resource "aws_lambda_function" "encrypt_snapshot" {
   filename         = "encrypt_snapshot.zip"
   source_code_hash = "${data.archive_file.encrypt_snapshot_zip.output_base64sha256}"
   function_name    = "EC2Cryptomatic_encrypt_snapshot"
+  layers           = ["${aws_lambda_layer_version.lambda_layer.layer_arn}"]
   role             = "${aws_iam_role.iam_role_lambda.arn}"
   description      = "Encrypt an existing snapshot and encrypt it"
   handler          = "ebs_encrypt_snapshot.lambda_handler"
@@ -62,6 +63,7 @@ resource "aws_lambda_function" "create_volume" {
   filename         = "create_volume.zip"
   source_code_hash = "${data.archive_file.create_volume_zip.output_base64sha256}"
   function_name    = "EC2Cryptomatic_create_volume"
+  layers           = ["${aws_lambda_layer_version.lambda_layer.layer_arn}"]
   role             = "${aws_iam_role.iam_role_lambda.arn}"
   description      = "Create a new volume from an existing snapshot"
   handler          = "ebs_create_volume_from_snapshot.lambda_handler"
