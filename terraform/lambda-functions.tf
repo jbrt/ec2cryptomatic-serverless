@@ -12,24 +12,24 @@ data "archive_file" "layer_zip" {
 
 data "archive_file" "take_snapshot_zip" {
   type        = "zip"
-  source_file  = "files/ebs_take_snapshot.py"
+  source_file = "files/ebs_take_snapshot.py"
   output_path = "take_snapshot.zip"
 }
 
 data "archive_file" "encrypt_snapshot_zip" {
   type        = "zip"
-  source_file  = "files/ebs_encrypt_snapshot.py"
+  source_file = "files/ebs_encrypt_snapshot.py"
   output_path = "encrypt_snapshot.zip"
 }
 
 data "archive_file" "create_volume_zip" {
   type        = "zip"
-  source_file  = "files/ebs_create_volume_from_snapshot.py"
+  source_file = "files/ebs_create_volume_from_snapshot.py"
   output_path = "create_volume.zip"
 }
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-  filename = "layer.zip"
+  filename   = "layer.zip"
   layer_name = "EC2Cryptomatic_BaseLibraryLayer"
 
   compatible_runtimes = ["python3.6", "python3.7"]
@@ -44,7 +44,7 @@ resource "aws_lambda_function" "take_snapshot" {
   description      = "Take snapshot on existing EBS volumes"
   handler          = "ebs_take_snapshot.lambda_handler"
   runtime          = "python3.6"
-  timeout          = 300
+  timeout          = "${var.lambda_timeout}"
 }
 
 resource "aws_lambda_function" "encrypt_snapshot" {
@@ -56,7 +56,7 @@ resource "aws_lambda_function" "encrypt_snapshot" {
   description      = "Encrypt an existing snapshot and encrypt it"
   handler          = "ebs_encrypt_snapshot.lambda_handler"
   runtime          = "python3.6"
-  timeout          = 300
+  timeout          = "${var.lambda_timeout}"
 }
 
 resource "aws_lambda_function" "create_volume" {
@@ -68,5 +68,5 @@ resource "aws_lambda_function" "create_volume" {
   description      = "Create a new volume from an existing snapshot"
   handler          = "ebs_create_volume_from_snapshot.lambda_handler"
   runtime          = "python3.6"
-  timeout          = 300
+  timeout          = "${var.lambda_timeout}"
 }
