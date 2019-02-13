@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import logging
-from aws_library.ebs_abstract_classes import EBSBase
+from aws_library.ebs_abstract_classes import LambdaBase
 
 LOGGER = logging.getLogger('ec2-cryptomatic')
 LOGGER.setLevel(logging.INFO)
@@ -10,7 +10,7 @@ stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
 
-class EBSCreateVolumeFromSnapshot(EBSBase):
+class EBSCreateVolumeFromSnapshot(LambdaBase):
 
     def __init__(self, region: str, az: str, snapshot_id: str, volume_type: str, uuid: str = ''):
         """

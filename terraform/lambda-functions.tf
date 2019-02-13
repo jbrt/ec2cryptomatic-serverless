@@ -28,6 +28,12 @@ data "archive_file" "create_volume_zip" {
   output_path = "create_volume.zip"
 }
 
+data "archive_file" "swap_volumes_zip" {
+  type        = "zip"
+  source_file = "files/ec2_swap_volumes.py"
+  output_path = "swap_volumes.zip"
+}
+
 resource "aws_lambda_layer_version" "lambda_layer" {
   filename   = "layer.zip"
   layer_name = "EC2Cryptomatic_BaseLibraryLayer"
@@ -67,6 +73,18 @@ resource "aws_lambda_function" "create_volume" {
   role             = "${aws_iam_role.iam_role_lambda.arn}"
   description      = "Create a new volume from an existing snapshot"
   handler          = "ebs_create_volume_from_snapshot.lambda_handler"
+  runtime          = "python3.6"
+  timeout          = "${var.lambda_timeout}"
+}
+
+resource "aws_lambda_function" "swap_volumes" {
+  filename         = "swap_volumes.zip"
+  source_code_hash = "${data.archive_file.swap_volumes_zip.output_base64sha256}"
+  function_name    = "EC2Cryptomatic_swap_volumes"
+  layers           = ["${aws_lambda_layer_version.lambda_layer.layer_arn}"]
+  role             = "${aws_iam_role.iam_role_lambda.arn}"
+  description      = "Exchange volumes for a given instance"
+  handler          = "ec2_swap_volumes.lambda_handler"
   runtime          = "python3.6"
   timeout          = "${var.lambda_timeout}"
 }

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import logging
-from aws_library.ebs_abstract_classes import EBSBase
+from aws_library.ebs_abstract_classes import LambdaBase
 
 LOGGER = logging.getLogger('ec2-cryptomatic')
 LOGGER.setLevel(logging.INFO)
@@ -10,7 +10,7 @@ stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
 
-class EBSEncryptSnapshot(EBSBase):
+class EBSEncryptSnapshot(LambdaBase):
     """ Encrypt an existing EBS snapshot """
 
     def __init__(self, region: str, snapshot_id: str,
@@ -36,8 +36,6 @@ class EBSEncryptSnapshot(EBSBase):
         Encrypt a snapshot
         :return: (dict) returns a dict with the snapshot ID
         """
-        # TODO : Add an error detection of non-existing volume ID
-
         LOGGER.info(f'{self._log_base} Copy the snapshot {self._snapshot_id} '
                     f'and encrypt it ')
 

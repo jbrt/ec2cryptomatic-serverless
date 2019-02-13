@@ -11,7 +11,7 @@ stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
 
-class EBSBase(object, metaclass=abc.ABCMeta):
+class LambdaBase(object, metaclass=abc.ABCMeta):
     """
     Abstract class for EBS actions
     """

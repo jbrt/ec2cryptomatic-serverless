@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import logging
-from aws_library.ebs_abstract_classes import EBSBase
+from aws_library.ebs_abstract_classes import LambdaBase
 
 LOGGER = logging.getLogger('ec2-cryptomatic')
 LOGGER.setLevel(logging.INFO)
@@ -10,7 +10,7 @@ stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
 
-class EBSCreateSnapshot(EBSBase):
+class EBSCreateSnapshot(LambdaBase):
     """ Take a snapshot of an existing EBS volume """
 
     def __init__(self, region: str, volume_id: str, uuid: str = ''):
@@ -30,8 +30,6 @@ class EBSCreateSnapshot(EBSBase):
         Take a snapshot
         :return: (dict) returns a dict with the snapshot ID
         """
-        # TODO : Add an error detection of non-existing volume ID
-
         LOGGER.info(f'{self._log_base} Take a snapshot on EBS volume {self._volume_id}')
         volume = self._ec2_resource.Volume(self._volume_id)
         snapshot = volume.create_snapshot(Description=f'snapshot of {self._volume_id}')
