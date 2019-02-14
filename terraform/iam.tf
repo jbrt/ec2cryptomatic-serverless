@@ -1,7 +1,8 @@
 # IAM Role & Policies
 
+# Role IAM & Polices for the Lambda functions
 resource "aws_iam_role" "iam_role_lambda" {
-  name = "EC2CryptomaticRole"
+  name = "EC2CryptomaticRoleLambda"
 
   assume_role_policy = <<EOF
 {
@@ -83,4 +84,56 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 resource "aws_iam_role_policy_attachment" "ec2_volumes" {
   role       = "${aws_iam_role.iam_role_lambda.name}"
   policy_arn = "${aws_iam_policy.ec2_permissions.arn}"
+}
+
+
+# Role IAM & Policies for Step Functions
+resource "aws_iam_role" "iam_role_stepfunctions" {
+  name = "EC2CryptomaticRoleStepFunctions"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "states.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "stepfunctions_permissions" {
+  name        = "EC2Cryptomatic_stepfunctions_lambda"
+  description = "IAM policy for authorizing StepFunction to invoke Lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "lambda:InvokeFunction"
+      ],
+      "Resource": [
+        "${aws_lambda_function.create_volume.arn}",
+        "${aws_lambda_function.encrypt_snapshot.arn}",
+        "${aws_lambda_function.swap_volumes.arn}",
+        "${aws_lambda_function.take_snapshot.arn}"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "stepfunctions_lambda" {
+  role       = "${aws_iam_role.iam_role_stepfunctions.name}"
+  policy_arn = "${aws_iam_policy.stepfunctions_permissions.arn}"
 }

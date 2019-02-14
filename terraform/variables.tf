@@ -14,3 +14,9 @@ variable "lambda_timeout" {
   description = "The timout applyied on each Lambda function"
   default     = 300
 }
+
+locals {
+  tags = {
+    Project = "EC2Cryptomatic"
+  }
+}
