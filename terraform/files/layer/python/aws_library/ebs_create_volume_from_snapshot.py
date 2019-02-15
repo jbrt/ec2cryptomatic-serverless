@@ -12,16 +12,15 @@ LOGGER.addHandler(stream_handler)
 
 class EBSCreateVolumeFromSnapshot(LambdaBase):
 
-    def __init__(self, region: str, az: str, snapshot_id: str, volume_type: str, uuid: str = ''):
+    def __init__(self, region: str, az: str, snapshot_id: str, volume_type: str):
         """
         Initialization
         :param region: (str) AWS region
         :param az: (str) AWS AZ (ex: gp2)
         :param snapshot_id: (str) ID of the snapshot
         :param volume_type: (str) type of the EBS volume
-        :param uuid: (str) UUID
         """
-        super().__init__(region=region, uuid=uuid)
+        super().__init__(region=region)
 
         self._az = az
         self._snapshot_id = snapshot_id

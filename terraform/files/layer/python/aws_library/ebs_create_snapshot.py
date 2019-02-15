@@ -13,14 +13,13 @@ LOGGER.addHandler(stream_handler)
 class EBSCreateSnapshot(LambdaBase):
     """ Take a snapshot of an existing EBS volume """
 
-    def __init__(self, region: str, volume_id: str, uuid: str = ''):
+    def __init__(self, region: str, volume_id: str):
         """
         Initializer
         :param region: (str) AWS region (ex: eu-west-1)
         :param volume_id: (str) EBS volume ID
-        :param uuid: (str) An UUID as session ID
         """
-        super().__init__(region=region, uuid=uuid)
+        super().__init__(region=region)
 
         self._volume_id = volume_id
         self._wait_snapshot = self._ec2_client.get_waiter('snapshot_completed')

@@ -14,7 +14,7 @@ class EBSEncryptSnapshot(LambdaBase):
     """ Encrypt an existing EBS snapshot """
 
     def __init__(self, region: str, snapshot_id: str,
-                 kms_key: str = 'alias/aws/ebs', uuid: str = '',
+                 kms_key: str = 'alias/aws/ebs',
                  destroy_source=True):
         """
         Initializer
@@ -22,9 +22,8 @@ class EBSEncryptSnapshot(LambdaBase):
         :param snapshot_id: (str) ID of the snapshot to encrypt
         :param kms_key: (str) KMS Key for the encryption
         :param destroy_source: (bool) if True destroy the source snapshot after encryption
-        :param uuid: (str) UUID used for tracing
         """
-        super().__init__(region=region, uuid=uuid)
+        super().__init__(region=region)
 
         self._destroy_source = destroy_source
         self._kms_key = kms_key

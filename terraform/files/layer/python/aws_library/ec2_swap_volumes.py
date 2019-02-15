@@ -12,17 +12,15 @@ LOGGER.addHandler(stream_handler)
 
 class EC2SwapVolumes(LambdaBase):
 
-    def __init__(self, region: str, instance_id: str, volume: str,
-                 new_volume: str, uuid: str = ''):
+    def __init__(self, region: str, instance_id: str, volume: str, new_volume: str):
         """
         Initialization
         :param region: (str) AWS region
         :param instance_id: (str) Instance ID
         :param volume: (str) volume ID to bo swapped
         :param new_volume: (str) new volume to use
-        :param uuid: (str) UUID
         """
-        super().__init__(region=region, uuid=uuid)
+        super().__init__(region=region)
         self._instance_id = instance_id
         self._volume = volume
         self._new_volume = new_volume

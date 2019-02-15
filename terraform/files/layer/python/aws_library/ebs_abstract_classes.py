@@ -16,14 +16,13 @@ class LambdaBase(object, metaclass=abc.ABCMeta):
     Abstract class for EBS actions
     """
 
-    def __init__(self, region: str, uuid: str = ''):
+    def __init__(self, region: str):
         """
         Initialization
         :param region: (str) AWS region
-        :param uuid: (str) UUID
         """
         self._region = region
-        self._log_base = f'{__class__.__name__} {uuid}'
+        self._log_base = f'{__class__.__name__} '
 
         self._ec2_client = boto3.client('ec2', region_name=region)
         self._ec2_resource = boto3.resource('ec2', region_name=region)
