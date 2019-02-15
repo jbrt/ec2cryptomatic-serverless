@@ -5,6 +5,6 @@ from aws_library.ebs_encrypt_snapshot import EBSEncryptSnapshot
 
 
 def lambda_handler(event, context):
-    EBSEncryptSnapshot(region=event['region'],
-                       snapshot_id=event['snapshot_id'],
-                       kms_key=event['kms_key']).start()
+    return EBSEncryptSnapshot(region=event['region'],
+                              snapshot_id=event['snapshot_id'],
+                              kms_key=event['kms_key']).start()
