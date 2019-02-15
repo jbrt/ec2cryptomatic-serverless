@@ -18,6 +18,16 @@ resource "aws_sfn_state_machine" "state_machine" {
     "EncryptSnapshot": {
       "Type": "Task",
       "Resource": "${aws_lambda_function.encrypt_snapshot.arn}",
+      "Next": "CreateVolume"
+    },
+     "CreateVolume": {
+      "Type": "Task",
+      "Resource": "${aws_lambda_function.create_volume.arn}",
+      "Next": "SwapVolume"
+    },
+    "SwapVolume": {
+      "Type": "Task",
+      "Resource": "${aws_lambda_function.swap_volumes.arn}",
       "End": true
     }
   }
