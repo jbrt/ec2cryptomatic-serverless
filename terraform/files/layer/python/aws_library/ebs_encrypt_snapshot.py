@@ -46,9 +46,8 @@ class EBSEncryptSnapshot(LambdaBase):
         self._wait_snapshot.wait(SnapshotIds=[snap_id['SnapshotId']])
 
         if self._destroy_source:
-            self._ec2_resource.Snapshot(snap_id['SnapshotId']).delete()
+            self._ec2_resource.Snapshot(self._snapshot_id).delete()
 
         LOGGER.info(f'{self._log_base} Encrypted Snapshot created {snap_id["SnapshotId"]}')
         return {'region': self._region,
-                'snapshot': self._snapshot_id,
-                'encrypted_snapshot': snap_id['SnapshotId']}
+                'encrypted_snapshot_id': snap_id['SnapshotId']}

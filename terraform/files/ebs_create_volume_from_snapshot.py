@@ -8,6 +8,6 @@ def lambda_handler(event, context):
     print(f'{event["uuid"]} Creating a new volume {event["volume_type"]} '
           f'from snapshot {event["snapshot_id"]}')
     return {**event, **EBSCreateVolumeFromSnapshot(region=event['region'],
-                                                   snapshot_id=event['snapshot_id'],
+                                                   snapshot_id=event['encrypted_snapshot_id'],
                                                    az=event['az'],
                                                    volume_type=event['volume_type']).start()}

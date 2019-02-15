@@ -37,5 +37,4 @@ class EBSCreateSnapshot(LambdaBase):
 
         LOGGER.info(f'{self._log_base} Snapshot created {snapshot.id}')
         return {'region': self._region,
-                'volume': self._volume_id,
-                'snapshot': snapshot.id}
+                'snapshot_id': snapshot.id}
