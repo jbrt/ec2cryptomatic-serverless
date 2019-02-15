@@ -13,6 +13,11 @@ resource "aws_sfn_state_machine" "state_machine" {
     "TakeSnapshot": {
       "Type": "Task",
       "Resource": "${aws_lambda_function.take_snapshot.arn}",
+      "Next": "EncryptSnapshot"
+    },
+    "EncryptSnapshot": {
+      "Type": "Task",
+      "Resource": "${aws_lambda_function.encrypt_snapshot.arn}",
       "End": true
     }
   }
