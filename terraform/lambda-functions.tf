@@ -40,6 +40,12 @@ data "archive_file" "extract_volumes_zip" {
   output_path = "extract_volumes.zip"
 }
 
+data "archive_file" "cleanup_snapshot_zip" {
+  type        = "zip"
+  source_file = "files/ebs_cleanup_snapshot.py"
+  output_path = "cleanup_snapshot.zip"
+}
+
 resource "aws_lambda_layer_version" "lambda_layer" {
   filename   = "layer.zip"
   layer_name = "EC2Cryptomatic_BaseLibraryLayer"
@@ -103,6 +109,18 @@ resource "aws_lambda_function" "extract_volumes" {
   role             = "${aws_iam_role.iam_role_lambda.arn}"
   description      = "Produce a EBS volume list from an instance ID"
   handler          = "ec2_extract_volumes.lambda_handler"
+  runtime          = "python3.6"
+  timeout          = "${var.lambda_timeout}"
+}
+
+resource "aws_lambda_function" "cleanup_snapshot" {
+  filename         = "cleanup_snapshot.zip"
+  source_code_hash = "${data.archive_file.cleanup_snapshot_zip.output_base64sha256}"
+  function_name    = "EC2Cryptomatic_cleanup_snapshot"
+  layers           = ["${aws_lambda_layer_version.lambda_layer.layer_arn}"]
+  role             = "${aws_iam_role.iam_role_lambda.arn}"
+  description      = "Delete the encrypted snapshot used for creating the new volume"
+  handler          = "ebs_cleanup_snapshot.lambda_handler"
   runtime          = "python3.6"
   timeout          = "${var.lambda_timeout}"
 }

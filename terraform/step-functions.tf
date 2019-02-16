@@ -43,9 +43,15 @@ resource "aws_sfn_state_machine" "state_machine" {
       "Type": "Task",
       "Resource": "${aws_lambda_function.create_volume.arn}",
       "Comment": "Create a new volume from the given snapshot",
-      "Next": "SwapVolume"
+      "Next": "CleanupEncryptedSnapshot"
     },
-    "SwapVolume": {
+    "CleanupEncryptedSnapshot": {
+      "Type": "Task",
+      "Resource": "${aws_lambda_function.cleanup_snapshot.arn}",
+      "Comment": "Delete the encrypted snapshot used for the creation of new volume",
+      "Next": "SwapVolumeIntoInstance"
+    },
+    "SwapVolumeIntoInstance": {
       "Type": "Task",
       "Resource": "${aws_lambda_function.swap_volumes.arn}",
       "Comment": "Exchange a volume by an another for the given instance",

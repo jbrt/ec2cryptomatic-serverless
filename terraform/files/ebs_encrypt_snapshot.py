@@ -9,8 +9,7 @@ def lambda_handler(event, context):
     snapshot_id = event['elements']['snapshot_id']
     kms_key = event['kms_key']
 
-    print(f'{event["uuid"]} Encrypt snapshot event["snapshot_id"] '
-          f'with event["kms_key"]')
+    print(f'Encrypt snapshot event["snapshot_id"] with event["kms_key"]')
     return {**event, 'elements': {**event['elements'],
                                   **EBSEncryptSnapshot(region=region,
                                                        snapshot_id=snapshot_id,

@@ -47,8 +47,3 @@ class EC2SwapVolumes(LambdaBase):
         instance.attach_volume(Device=device, VolumeId=self._new_volume)
         instance.modify_attribute(BlockDeviceMappings=[{'DeviceName': device,
                                                         'Ebs': {'DeleteOnTermination':  flag}}])
-
-        # return {'region': self._region,
-        #         'instance': self._instance_id,
-        #         'volume': self._volume,
-        #         'new_volume': self._new_volume}

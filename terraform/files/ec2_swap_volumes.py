@@ -10,8 +10,7 @@ def lambda_handler(event, context):
     new_volume = event['elements']['new_volume']
     instance_id = event['instance_id']
 
-    print(f'{event["uuid"]} Swap volume {volume} by '
-          f'{new_volume} for instance {instance_id}')
+    print(f'Swap volume {volume} by {new_volume} for instance {instance_id}')
     EC2SwapVolumes(region=region,
                    instance_id=instance_id,
                    volume=volume,

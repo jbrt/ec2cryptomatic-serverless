@@ -8,6 +8,7 @@ from aws_library.ebs_create_snapshot import EBSCreateSnapshot
 def lambda_handler(event, context):
     region = event['region']
     volume = event['volumes'][0]
+    delete_source = event['delete_source']
     ec2 = boto3.resource('ec2', region_name=region)
     ec2volume = ec2.Volume(volume)
 
@@ -15,9 +16,10 @@ def lambda_handler(event, context):
         del event['elements']
     event['elements'] = {}
 
-    print(f'{event["uuid"]} Creating a snapshot from {volume} volume')
+    print(f'Creating a snapshot from {volume} volume')
     return {**event, 'elements': {**event['elements'],
                                   'az': ec2volume.availability_zone,
                                   'volume_type': ec2volume.volume_type,
                                   **EBSCreateSnapshot(region=region,
-                                                      volume_id=volume).start()}}
+                                                      volume_id=volume,
+                                                      delete_source=delete_source).start()}}

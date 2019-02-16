@@ -125,7 +125,8 @@ resource "aws_iam_policy" "stepfunctions_permissions" {
         "${aws_lambda_function.encrypt_snapshot.arn}",
         "${aws_lambda_function.swap_volumes.arn}",
         "${aws_lambda_function.take_snapshot.arn}",
-        "${aws_lambda_function.extract_volumes.arn}"
+        "${aws_lambda_function.extract_volumes.arn}",
+        "${aws_lambda_function.cleanup_snapshot.arn}"
       ],
       "Effect": "Allow"
     }

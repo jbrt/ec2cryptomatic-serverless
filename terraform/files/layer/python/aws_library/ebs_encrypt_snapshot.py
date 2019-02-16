@@ -13,15 +13,12 @@ LOGGER.addHandler(stream_handler)
 class EBSEncryptSnapshot(LambdaBase):
     """ Encrypt an existing EBS snapshot """
 
-    def __init__(self, region: str, snapshot_id: str,
-                 kms_key: str = 'alias/aws/ebs',
-                 destroy_source=True):
+    def __init__(self, region: str, snapshot_id: str, kms_key: str = 'alias/aws/ebs'):
         """
         Initializer
         :param region: (str) AWS region
         :param snapshot_id: (str) ID of the snapshot to encrypt
         :param kms_key: (str) KMS Key for the encryption
-        :param destroy_source: (bool) if True destroy the source snapshot after encryption
         """
         super().__init__(region=region)
 
@@ -45,8 +42,8 @@ class EBSEncryptSnapshot(LambdaBase):
                                 KmsKeyId=self._kms_key)
         self._wait_snapshot.wait(SnapshotIds=[snap_id['SnapshotId']])
 
-        if self._destroy_source:
-            self._ec2_resource.Snapshot(self._snapshot_id).delete()
+        # Delete the original snapshot after encryption
+        self._ec2_resource.Snapshot(self._snapshot_id).delete()
 
         LOGGER.info(f'{self._log_base} Encrypted Snapshot created {snap_id["SnapshotId"]}')
         return {'encrypted_snapshot_id': snap_id['SnapshotId']}
