@@ -5,9 +5,15 @@ from aws_library.ebs_create_volume_from_snapshot import EBSCreateVolumeFromSnaps
 
 
 def lambda_handler(event, context):
-    print(f'{event["uuid"]} Creating a new volume {event["volume_type"]} '
-          f'from snapshot {event["snapshot_id"]}')
-    return {**event, **EBSCreateVolumeFromSnapshot(region=event['region'],
-                                                   snapshot_id=event['encrypted_snapshot_id'],
-                                                   az=event['az'],
-                                                   volume_type=event['volume_type']).start()}
+    region = event['region']
+    snapshot_id = event['elements']['encrypted_snapshot_id']
+    az = event['elements']['az']
+    volume_type = event['elements']['volume_type']
+
+    print(f'{event["uuid"]} Creating a new volume {volume_type} '
+          f'from snapshot {snapshot_id}')
+    return {**event, 'elements': {**event['elements'],
+                                  **EBSCreateVolumeFromSnapshot(region=region,
+                                                                snapshot_id=snapshot_id,
+                                                                az=az,
+                                                                volume_type=volume_type).start()}}

@@ -49,5 +49,4 @@ class EBSEncryptSnapshot(LambdaBase):
             self._ec2_resource.Snapshot(self._snapshot_id).delete()
 
         LOGGER.info(f'{self._log_base} Encrypted Snapshot created {snap_id["SnapshotId"]}')
-        return {'region': self._region,
-                'encrypted_snapshot_id': snap_id['SnapshotId']}
+        return {'encrypted_snapshot_id': snap_id['SnapshotId']}

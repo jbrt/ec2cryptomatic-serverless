@@ -1,10 +1,23 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+import boto3
 from aws_library.ebs_create_snapshot import EBSCreateSnapshot
 
 
 def lambda_handler(event, context):
-    print(f'{event["uuid"]} Creating a snapshot from {event["volume_id"]} volume')
-    return {**event, **EBSCreateSnapshot(region=event['region'],
-                                         volume_id=event['volume_id']).start()}
+    region = event['region']
+    volume = event['volumes'][0]
+    ec2 = boto3.resource('ec2', region_name=region)
+    ec2volume = ec2.Volume(volume)
+
+    if 'elements' in event:
+        del event['elements']
+    event['elements'] = {}
+
+    print(f'{event["uuid"]} Creating a snapshot from {volume} volume')
+    return {**event, 'elements': {**event['elements'],
+                                  'az': ec2volume.availability_zone,
+                                  'volume_type': ec2volume.volume_type,
+                                  **EBSCreateSnapshot(region=region,
+                                                      volume_id=volume).start()}}

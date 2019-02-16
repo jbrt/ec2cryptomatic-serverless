@@ -34,6 +34,4 @@ class EBSCreateVolumeFromSnapshot(LambdaBase):
                                                   VolumeType=self._volume_type,
                                                   AvailabilityZone=self._az)
         self._wait_volume.wait(VolumeIds=[volume.id])
-        return {'region': self._region,
-                'az': self._az,
-                'new_volume': volume.id}
+        return {'new_volume': volume.id}

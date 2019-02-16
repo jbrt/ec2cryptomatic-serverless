@@ -36,4 +36,6 @@ def lambda_handler(event, context):
             del volumes[device.id]
             continue
 
-    return {**event, 'volumes': volumes}
+    return {**event,
+            'volumes': volumes,
+            'has_elements': True if volumes else False}

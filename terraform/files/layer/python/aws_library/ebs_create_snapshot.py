@@ -36,5 +36,4 @@ class EBSCreateSnapshot(LambdaBase):
         self._wait_snapshot.wait(SnapshotIds=[snapshot.id])
 
         LOGGER.info(f'{self._log_base} Snapshot created {snapshot.id}')
-        return {'region': self._region,
-                'snapshot_id': snapshot.id}
+        return {'snapshot_id': snapshot.id}
