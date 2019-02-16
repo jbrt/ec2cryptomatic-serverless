@@ -32,11 +32,21 @@ class EC2SwapVolumes(LambdaBase):
 
         instance = self._ec2_resource.Instance(self._instance_id)
         volume = self._ec2_resource.Volume(self._volume)
+        new_volume = self._ec2_resource.Volume(self._new_volume)
 
+        # Adding tags on the new volume from the original one
+        new_volume.create_tags(Tags=volume.tags)
+
+        # Extract device name (ex: /dev/xvda) and DeleteOnTermination flag
         device = volume.attachments[0]['Device']
+        flag = volume.attachments[0]['DeleteOnTermination']
+
         instance.detach_volume(Device=device, VolumeId=self._volume)
         self._wait_volume.wait(VolumeIds=[self._volume])
+
         instance.attach_volume(Device=device, VolumeId=self._new_volume)
+        instance.modify_attribute(BlockDeviceMappings=[{'DeviceName': device,
+                                                        'Ebs': {'DeleteOnTermination':  flag}}])
 
         return {'region': self._region,
                 'instance': self._instance_id,
