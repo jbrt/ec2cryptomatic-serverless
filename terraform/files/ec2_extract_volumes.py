@@ -1,5 +1,9 @@
 # coding: utf-8
 
+"""
+Extract the EBS volumes from the given instance
+"""
+
 import boto3
 import logging
 

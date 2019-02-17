@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+"""
+Encrypt a given snapshot (by copying a non-encrypted snapshot)
+"""
+
 from aws_library.ebs_encrypt_snapshot import EBSEncryptSnapshot
 
 

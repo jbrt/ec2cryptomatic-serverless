@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+"""
+Create a brand new volume from a given snapshot
+"""
+
 from aws_library.ebs_create_volume_from_snapshot import EBSCreateVolumeFromSnapshot
 
 

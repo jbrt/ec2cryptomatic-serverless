@@ -1,5 +1,10 @@
 # coding: utf-8
 
+"""
+Delete the encrypted and the EBS source volume (if delete_source == True)
+"""
+
+
 import boto3
 
 

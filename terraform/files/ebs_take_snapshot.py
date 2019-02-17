@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+"""
+Take a snapshot for a given EBS volume
+"""
+
 import boto3
 from aws_library.ebs_create_snapshot import EBSCreateSnapshot
 

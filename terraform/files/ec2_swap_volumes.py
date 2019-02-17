@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+"""
+Swap a volume by another into a given instance
+"""
+
 from aws_library.ec2_swap_volumes import EC2SwapVolumes
 
 
