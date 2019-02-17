@@ -8,8 +8,21 @@ resource "aws_sfn_state_machine" "state_machine" {
   definition = <<EOF
 {
   "Comment": "EC2Cryptomatic state machine used for converting uncrypted volumes to encrypted ones",
-  "StartAt": "ExtractVolumes",
+  "StartAt": "CheckInstance",
   "States": {
+    "CheckInstance": {
+      "Type": "Task",
+      "Resource": "${aws_lambda_function.check_instance.arn}",
+      "Comment": "Check if instance is suitable for conversion",
+      "Next": "ExtractVolumes",
+      "Catch": [
+        {
+          "ErrorEquals": ["InstanceNotSuitable"],
+          "ResultPath": "$.error",
+          "Next": "Done"
+        }
+      ]
+    },
     "ExtractVolumes": {
       "Type": "Task",
       "Resource": "${aws_lambda_function.extract_volumes.arn}",

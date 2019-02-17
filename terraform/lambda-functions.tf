@@ -46,6 +46,12 @@ data "archive_file" "cleanup_snapshot_zip" {
   output_path = "cleanup_snapshot.zip"
 }
 
+data "archive_file" "check_instance_zip" {
+  type        = "zip"
+  source_file = "files/ec2_check_instance.py"
+  output_path = "check_instance.zip"
+}
+
 resource "aws_lambda_layer_version" "lambda_layer" {
   filename   = "layer.zip"
   layer_name = "EC2Cryptomatic_BaseLibraryLayer"
@@ -121,6 +127,18 @@ resource "aws_lambda_function" "cleanup_snapshot" {
   role             = "${aws_iam_role.iam_role_lambda.arn}"
   description      = "Delete the encrypted snapshot and source volume"
   handler          = "ebs_cleanup_snapshot.lambda_handler"
+  runtime          = "python3.6"
+  timeout          = "${var.lambda_timeout}"
+}
+
+resource "aws_lambda_function" "check_instance" {
+  filename         = "check_instance.zip"
+  source_code_hash = "${data.archive_file.check_instance_zip.output_base64sha256}"
+  function_name    = "EC2Cryptomatic_check_instance"
+  layers           = ["${aws_lambda_layer_version.lambda_layer.layer_arn}"]
+  role             = "${aws_iam_role.iam_role_lambda.arn}"
+  description      = "Check if the given instance is suitable for conversion"
+  handler          = "ec2_check_instance.lambda_handler"
   runtime          = "python3.6"
   timeout          = "${var.lambda_timeout}"
 }
