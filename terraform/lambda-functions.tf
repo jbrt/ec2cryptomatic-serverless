@@ -116,10 +116,10 @@ resource "aws_lambda_function" "extract_volumes" {
 resource "aws_lambda_function" "cleanup_snapshot" {
   filename         = "cleanup_snapshot.zip"
   source_code_hash = "${data.archive_file.cleanup_snapshot_zip.output_base64sha256}"
-  function_name    = "EC2Cryptomatic_cleanup_snapshot"
+  function_name    = "EC2Cryptomatic_cleanup"
   layers           = ["${aws_lambda_layer_version.lambda_layer.layer_arn}"]
   role             = "${aws_iam_role.iam_role_lambda.arn}"
-  description      = "Delete the encrypted snapshot used for creating the new volume"
+  description      = "Delete the encrypted snapshot and source volume"
   handler          = "ebs_cleanup_snapshot.lambda_handler"
   runtime          = "python3.6"
   timeout          = "${var.lambda_timeout}"

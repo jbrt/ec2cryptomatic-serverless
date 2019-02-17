@@ -22,7 +22,6 @@ class EBSEncryptSnapshot(LambdaBase):
         """
         super().__init__(region=region)
 
-        self._destroy_source = destroy_source
         self._kms_key = kms_key
         self._snapshot_id = snapshot_id
         self._wait_snapshot = self._ec2_client.get_waiter('snapshot_completed')

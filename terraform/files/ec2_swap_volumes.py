@@ -16,9 +16,4 @@ def lambda_handler(event, context):
                    volume=volume,
                    new_volume=new_volume).start()
 
-    # Delete the volume
-    event['volumes'].pop(0)
-    if not event['volumes']:
-        event['has_elements'] = False
-
     return event
