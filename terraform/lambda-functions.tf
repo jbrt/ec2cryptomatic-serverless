@@ -1,7 +1,12 @@
 # Lambda functions
 
+# WARNING: the 2.x version of the AWS Terraform provider has introducing some 
+# breaking chances into the syntax of a lot of objects.
+# https://www.terraform.io/docs/providers/aws/guides/version-2-upgrade.html
+
 provider "aws" {
-  region = "${var.region}"
+  region  = "${var.region}"
+  version = "1.60.0"
 }
 
 data "archive_file" "layer_zip" {
