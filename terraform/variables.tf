@@ -20,3 +20,4 @@ locals {
     Project = "EC2Cryptomatic"
   }
 }
+

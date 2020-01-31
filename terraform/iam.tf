@@ -19,6 +19,7 @@ resource "aws_iam_role" "iam_role_lambda" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_policy" "lambda_logging" {
@@ -41,6 +42,7 @@ resource "aws_iam_policy" "lambda_logging" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_policy" "ec2_permissions" {
@@ -74,18 +76,18 @@ resource "aws_iam_policy" "ec2_permissions" {
     ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role       = "${aws_iam_role.iam_role_lambda.name}"
-  policy_arn = "${aws_iam_policy.lambda_logging.arn}"
+  role       = aws_iam_role.iam_role_lambda.name
+  policy_arn = aws_iam_policy.lambda_logging.arn
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_volumes" {
-  role       = "${aws_iam_role.iam_role_lambda.name}"
-  policy_arn = "${aws_iam_policy.ec2_permissions.arn}"
+  role       = aws_iam_role.iam_role_lambda.name
+  policy_arn = aws_iam_policy.ec2_permissions.arn
 }
-
 
 # Role IAM & Policies for Step Functions
 resource "aws_iam_role" "iam_role_stepfunctions" {
@@ -106,6 +108,7 @@ resource "aws_iam_role" "iam_role_stepfunctions" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_policy" "stepfunctions_permissions" {
@@ -134,9 +137,11 @@ resource "aws_iam_policy" "stepfunctions_permissions" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "stepfunctions_lambda" {
-  role       = "${aws_iam_role.iam_role_stepfunctions.name}"
-  policy_arn = "${aws_iam_policy.stepfunctions_permissions.arn}"
+  role       = aws_iam_role.iam_role_stepfunctions.name
+  policy_arn = aws_iam_policy.stepfunctions_permissions.arn
 }
+
