@@ -9,6 +9,10 @@ stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
+# Constants
+MAX_RETRIES = 360
+DELAY_RETRY = 30
+
 
 class EBSEncryptSnapshot(LambdaBase):
     """ Encrypt an existing EBS snapshot """
@@ -25,6 +29,8 @@ class EBSEncryptSnapshot(LambdaBase):
         self._kms_key = kms_key
         self._snapshot_id = snapshot_id
         self._wait_snapshot = self._ec2_client.get_waiter('snapshot_completed')
+        self._wait_snapshot.config.max_attempts = MAX_RETRIES
+        self._wait_snapshot.config.delay = DELAY_RETRY
 
     def start(self):
         """

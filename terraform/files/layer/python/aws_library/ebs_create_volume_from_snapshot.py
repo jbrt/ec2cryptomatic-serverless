@@ -9,6 +9,10 @@ stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.INFO)
 LOGGER.addHandler(stream_handler)
 
+# Constants
+MAX_RETRIES = 360
+DELAY_RETRY = 30
+
 
 class EBSCreateVolumeFromSnapshot(LambdaBase):
 
@@ -26,6 +30,8 @@ class EBSCreateVolumeFromSnapshot(LambdaBase):
         self._snapshot_id = snapshot_id
         self._volume_type = volume_type
         self._wait_volume = self._ec2_client.get_waiter('volume_available')
+        self._wait_volume.config.max_attempts = MAX_RETRIES
+        self._wait_volume.config.delay = DELAY_RETRY
 
     def start(self):
         LOGGER.info(f'Create a new EBS {self._volume_type} volume '

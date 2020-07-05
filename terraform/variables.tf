@@ -12,7 +12,7 @@ variable "log_retention" {
 
 variable "lambda_timeout" {
   description = "The timout applyied on each Lambda function"
-  default     = 300
+  default     = 900
 }
 
 locals {
