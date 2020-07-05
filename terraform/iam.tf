@@ -68,7 +68,12 @@ resource "aws_iam_policy" "ec2_permissions" {
                 "ec2:DescribeSnapshots",
                 "ec2:DescribeVolumes",
                 "ec2:DetachVolume",
-                "ec2:ModifyInstanceAttribute"
+                "ec2:ModifyInstanceAttribute",
+                "kms:Encrypt",
+                "kms:Decrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+                "kms:DescribeKey"
             ],
             "Effect": "Allow",
             "Resource": "*"
