@@ -37,6 +37,12 @@ class EBSEncryptSnapshot(LambdaBase):
         snapshot = self._ec2_resource.Snapshot(self._snapshot_id)
         snap_id = snapshot.copy(Description=f'encrypted copy of {snapshot.id}',
                                 Encrypted=True,
+                                TagSpecifications=[
+                                          {
+                                           'ResourceType': 'snapshot',
+                                           'Tags': snapshot.tags
+                                          },
+                                 ],
                                 SourceRegion=self._region,
                                 KmsKeyId=self._kms_key)
         self._wait_snapshot.wait(SnapshotIds=[snap_id['SnapshotId']])

@@ -30,8 +30,15 @@ class EBSCreateVolumeFromSnapshot(LambdaBase):
     def start(self):
         LOGGER.info(f'Create a new EBS {self._volume_type} volume '
                     f'from {self._snapshot_id}')
-        volume = self._ec2_resource.create_volume(SnapshotId=self._snapshot_id,
+        snapshot = self._ec2_resource.Snapshot(self._snapshot_id) 
+        volume = self._ec2_resource.create_volume(SnapshotId=snapshot.id,
                                                   VolumeType=self._volume_type,
+                                                  TagSpecifications=[
+                                          {
+                                           'ResourceType': 'volume',
+                                           'Tags': snapshot.tags
+                                          },
+                                 ],
                                                   AvailabilityZone=self._az)
         self._wait_volume.wait(VolumeIds=[volume.id])
         return {'new_volume': volume.id}

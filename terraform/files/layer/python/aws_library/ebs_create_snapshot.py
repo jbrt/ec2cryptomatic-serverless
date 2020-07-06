@@ -31,8 +31,16 @@ class EBSCreateSnapshot(LambdaBase):
         """
         LOGGER.info(f'{self._log_base} Take a snapshot on EBS volume {self._volume_id}')
         volume = self._ec2_resource.Volume(self._volume_id)
-        snapshot = volume.create_snapshot(Description=f'snapshot of {self._volume_id}')
-        snapshot.create_tags(Tags=[{'Key': 'volume_source', 'Value': self._volume_id}])
+        #snapshot = volume.create_snapshot(Description=f'snapshot of {self._volume_id}')
+        #-snapshot.create_tags(Tags=[{'Key': 'volume_source', 'Value': self._volume_id}])
+        snapshot = volume.create_snapshot(Description=f'snapshot of {self._volume_id}',
+                                          TagSpecifications=[
+                                            {
+                                              'ResourceType': 'snapshot',
+                                              'Tags': volume.tags
+                                            },
+                                          ]
+                   )
         self._wait_snapshot.wait(SnapshotIds=[snapshot.id])
 
         LOGGER.info(f'{self._log_base} Snapshot created {snapshot.id}')
